@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <link href="{{url_for('static',filename='css/main.css')}}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+   
+    <title>BrainWave | Login</title>
+</head>
+<body class="bg-gray-100 flex justify-center items-center h-screen" style="background-image: url(images/background.jpg); background-repeat:no-repeat; background-position: center;
+background-size: cover;">
+    
+    <div class=" p-6 md:p-10 rounded-lg shadow-md w-full max-w-md" style="background: linear-gradient(45deg, #010758, #e1c1ec);">
+        <h2 class="text-2xl font-semibold mb-4 text-center text-gray-800">Welcome Back!</h2>
+        <form id="loginForm">
+            <div class="mb-4">
+                <label for="login-email" class="block  font-semibold" style="color: #fff;">  Email</label>
+                <input type="email" id="login-email" name="login-email" placeholder=" Enter your registered email" class="w-full h-9 rounded border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" required>
+            </div>
+            <div class="mb-4">
+                <label for="login-password" class="block font-semibold" style="color: #fff;">Password</label>
+                <input type="password" id="login-password" name="login-password" placeholder=" Enter your Password" class="w-full h-9  rounded border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" required>
+            </div>
+            <button type="submit" id="btn" class="w-full bg-blue-500 text-white font-semibold py-2 mt-5 rounded hover:bg-blue-600 transition duration-200">Login</button>
+        </form>
+        <p class="text-sm text-white justify-around m-5" gap-0.5>Don't have an account? <a href="Signup.html" class="text-blue-600 font-semibold">Sign Up</a> <br>
+        <a href="Forgot.html" class="gap-0.5 mx-2 " style="color: #fff;">Forgot password?</a></p>
+    </div>
+
+    <script>
+    document.getElementById("loginForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const email = document.getElementById("login-email").value;
+        const password = document.getElementById("login-password").value;
+
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "email": email,
+            "password": password
+        });
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+        };
+
+        fetch("http://eb-flask-dev.ap-southeast-2.elasticbeanstalk.com/login", requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); 
+            })
+            .then(data => {
+                console.log(data);
+                if (data.message === "Login successful") {
+                    sessionStorage.setItem('username', data.username);
+                    window.location.href = "dashboard.html";
+                } else {
+                    throw new Error(data.message); 
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                if (error.message === 'Network response was not ok' || error.response.status === 401) {
+                    alert('Invalid username or password');
+                } else {
+                    alert('Login failed: ' + error.message);
+                }
+            });
+    });
+</script>
+
+</body>
+</html>

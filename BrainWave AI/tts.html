@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>Voice Recognition</title>
+    <link rel="stylesheet" href="assets/css/tts.css">
+</head>
+<body>
+    <div class="hero">
+        <h1>Text to speech <span>converter</span></h1>
+        <textarea placeholder="Write anything here..." ></textarea>
+        <div class="row">
+            <select></select>
+            <button> <img src="play.png">Listen</button>
+
+            <!-- <button id="download" onclick="downloadAudio()">Download</button> -->
+        </div>
+    </div>
+    <script src="assets/js/tts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/audio-recorder-polyfill"></script>
+
+</body>
+</html>

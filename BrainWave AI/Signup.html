@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>BrainWave | SignUp</title>
+</head>
+
+<body>
+
+    <div class="flex justify-center items-center h-screen " style="background-image: url(images/background.jpg); background-repeat:no-repeat; background-position: center;
+    background-size: cover;">
+
+        <div class="bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-700 to-0% p-8 rounded-lg shadow-md w-full max-w-md"
+            style="background: linear-gradient(45deg, #010758, #e1c1ec);">
+            <h2 class="text-2xl font-semibold mb-4 text-center text-gray-800">Join Us!</h2>
+            <form id="signup-form">
+                <div class="mb-4">
+                    <label for="username" class="block text-white font-semibold">Username</label>
+                    <input type="text" id="username" name="username" placeholder=" Enter username"
+                        class="w-full h-9 rounded border-blue-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50" required>
+                </div>
+                <div class="mb-4">
+                    <label for="signup-email" class="block text-white font-semibold">Email Address</label>
+                    <input type="email" id="signup-email" name="signup-email" placeholder=" example@gmail.com"
+                        class="w-full h-9 rounded border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50" required>
+                </div>
+                <div class="mb-4">
+                    <label for="signup-password" class="block text-white font-semibold">Password</label>
+                    <input type="password" id="signup-password" name="signup-password" placeholder=" Enter Password"
+                        class="w-full h-9 rounded border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50" required>
+                </div>
+                <button type="submit"
+                    class="w-full h-10 bg-green-500 text-white font-semibold py-2 my-5 rounded hover:bg-green-600 transition duration-200">Sign
+                    Up</button>
+            </form>
+            <p class="text-sm text-white text-center mt-4">Already have an account? <a href="Login.html"
+                    class="text-blue-600 font-semibold">Login here</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+
+    const data = JSON.stringify({
+        "username": username,
+        "email": email,
+        "password": password
+    });
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: data,
+        redirect: "follow"
+    };
+
+    // Send POST request to API
+    fetch("http://eb-flask-dev.ap-southeast-2.elasticbeanstalk.com/signup", requestOptions)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            if (data.message === "User created successfully") {
+                window.location.href = "Login.html";
+            } else {
+                throw new Error(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            if (error.message === 'Network response was not ok' || (error.response && error.response.status === 400)) {
+                alert('Username already exists!');
+            } else {
+                alert('Signup failed: ' + error.message);
+            }
+        });
+});
+
+    </script>
+</body>
+
+</html>
